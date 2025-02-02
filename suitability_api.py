@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from pydantic.v1 import BaseModel
 from typing import List
 from langchain_openai import ChatOpenAI
 from models.suitability_rating import SuitabilityRating

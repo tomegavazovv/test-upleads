@@ -5,3 +5,4 @@ langchain-core==0.1.27
 langchain-openai==0.0.5
 python-dotenv==1.0.0
 typing-extensions>=4.8.0
+langsmith==0.1.22
