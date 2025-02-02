@@ -60,7 +60,7 @@ def generate_proposal_with_model(model_name: str, prompt: str, job_title: str, j
     return model_name, result
 
 @app.get("/available-models")
-async def available_models():
+async def get_available_models():
     return available_models
 
 @app.post("/analyze-job", response_model=List[SuitabilityResponse])
