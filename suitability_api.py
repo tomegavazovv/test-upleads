@@ -1,13 +1,13 @@
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic.v1 import BaseModel
+from pydantic import BaseModel
 from typing import List
 from langchain_openai import ChatOpenAI
 from models.suitability_rating import SuitabilityRating
 from utils.get_model import get_model, available_models
 from prompts.company_info_prompt import company_info_prompt
 import concurrent.futures
-from fastapi.responses import JSONResponse
+from fastapi import Request
 
 app = FastAPI()
 
@@ -63,14 +63,8 @@ def generate_proposal_with_model(model_name: str, prompt: str, job_title: str, j
 async def available_models():
     return available_models
 
-@app.post("/analyze-job", response_model=List[SuitabilityResponse], methods=["POST", "OPTIONS"])
+@app.post("/analyze-job", response_model=List[SuitabilityResponse])
 async def analyze_job(job: JobRequest):
-    if request.method == "OPTIONS":
-        return JSONResponse(status_code=204, headers={
-            "Access-Control-Allow-Origin": "http://localhost:3000",
-            "Access-Control-Allow-Methods": "POST, OPTIONS",
-            "Access-Control-Allow-Headers": "Content-Type, Authorization"
-        })
     try:
         # Use ThreadPoolExecutor for parallel execution
         with concurrent.futures.ThreadPoolExecutor() as executor:
@@ -89,14 +83,8 @@ async def analyze_job(job: JobRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.post("/generate-proposal", response_model=List[ProposalResponse], methods=["POST", "OPTIONS"])
+@app.post("/generate-proposal", response_model=List[ProposalResponse])
 async def generate_proposal(job: JobRequest):
-    if request.method == "OPTIONS":
-        return JSONResponse(status_code=204, headers={
-            "Access-Control-Allow-Origin": "http://localhost:3000",
-            "Access-Control-Allow-Methods": "POST, OPTIONS",
-            "Access-Control-Allow-Headers": "Content-Type, Authorization"
-        })
     try:
         # Use ThreadPoolExecutor for parallel execution
         with concurrent.futures.ThreadPoolExecutor() as executor:
