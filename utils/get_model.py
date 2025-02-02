@@ -1,15 +1,10 @@
-from langchain_openai import  ChatOpenAI
-from langchain.callbacks.tracers import LangChainTracer
+from langchain_openai import ChatOpenAI
 from langchain.callbacks.manager import CallbackManager
 from langchain_anthropic import ChatAnthropic
 from langchain_openai.chat_models.base import BaseChatOpenAI
 import os
 
 available_models = ['deepseek-chat', 'gpt-4o', 'gpt-4o-mini', 'claude-3-5-sonnet-20240620']
-
-tracer = LangChainTracer(
-    project_name="chatbot-upleads"
-)
 
 def get_model(name: str):
   if name not in available_models:
@@ -19,7 +14,6 @@ def get_model(name: str):
     return ChatOpenAI(
       model=name,
       temperature=0,
-      callback_manager=CallbackManager([tracer]),
       api_key=os.getenv("OPENAI_API_KEY")
     )
   elif 'deepseek' in name:
@@ -28,8 +22,7 @@ def get_model(name: str):
       openai_api_key=os.getenv("DEEPSEEK_API_KEY"),
       openai_api_base="https://api.deepseek.com",
       max_tokens=1024,
-      temperature=0,
-      callback_manager=CallbackManager([tracer])
+      temperature=0
     )
   elif 'claude' in name:
     return ChatAnthropic(
@@ -38,8 +31,7 @@ def get_model(name: str):
       max_tokens=1024,
       timeout=None,
       max_retries=2,
-      api_key=os.getenv("ANTHROPIC_API_KEY"),
-      callback_manager=CallbackManager([tracer])
+      api_key=os.getenv("ANTHROPIC_API_KEY")
     )
   # if name == 'deepseek':
   #   return BaseChatOpenAI(
