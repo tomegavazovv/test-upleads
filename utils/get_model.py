@@ -5,7 +5,7 @@ from langchain_anthropic import ChatAnthropic
 from langchain_openai.chat_models.base import BaseChatOpenAI
 import os
 
-available_models = ['deepseek-chat', 'gpt-4o', 'gpt-4o-mini', 'claude-3-5-sonnet-20240620', 'o3-mini']
+available_models = ['deepseek-chat', 'gpt-4o', 'gpt-4o-mini', 'claude-3-5-sonnet-20240620']
 
 tracer = LangChainTracer(
     project_name="chatbot-upleads"
