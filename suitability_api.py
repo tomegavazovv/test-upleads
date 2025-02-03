@@ -14,7 +14,7 @@ app = FastAPI()
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "https://upleads-prod.web.app/"],  # Add your production domain
+    allow_origins=["http://localhost:3000", "https://upleads-prod.web.app"],  # Add your production domain
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -121,7 +121,7 @@ async def add_cors_headers(request: Request, call_next):
     response = await call_next(request)
     # Update to allow both local and production domains
     origin = request.headers.get('origin')
-    if origin in ["http://localhost:3000", "https://your-production-domain.com"]:
+    if origin in ["http://localhost:3000", "https://upleads-prod.web.app"]:
         response.headers["Access-Control-Allow-Origin"] = origin
     response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
     response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
