@@ -6,15 +6,10 @@
       "use": "@vercel/python",
       "config": {
         "runtime": "python3.9",
-        "maxDuration": 30
+        "maxDuration": 60
       }
     }
   ],
-  "functions": {
-    "suitability_api.py": {
-      "maxDuration": 30
-    }
-  },
   "routes": [
     {
       "src": "/(.*)",
