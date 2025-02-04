@@ -1,14 +1,14 @@
 {
   "version": 2,
   "functions": {
-    "suitability_api.py": {
+    "api/suitability_api.py": {
       "maxDuration": 60
     }
   },
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "suitability_api.py"
+      "destination": "api/suitability_api.py"
     }
   ]
 }
