@@ -10,6 +10,11 @@
       }
     }
   ],
+  "functions": {
+    "suitability_api.py": {
+      "maxDuration": 30
+    }
+  },
   "routes": [
     {
       "src": "/(.*)",
