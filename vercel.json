@@ -4,7 +4,10 @@
     {
       "src": "suitability_api.py",
       "use": "@vercel/python",
-      "config": { "runtime": "python3.9" }
+      "config": {
+        "runtime": "python3.9",
+        "maxDuration": 30
+      }
     }
   ],
   "routes": [

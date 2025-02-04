@@ -20,7 +20,8 @@ def get_model(name: str):
       model=name,
       temperature=0,
       callback_manager=CallbackManager([tracer]),
-      api_key=os.getenv("OPENAI_API_KEY")
+      api_key=os.getenv("OPENAI_API_KEY"),
+      request_timeout=30
     )
   elif 'deepseek' in name:
     return BaseChatOpenAI(
@@ -29,14 +30,15 @@ def get_model(name: str):
       openai_api_base="https://api.deepseek.com",
       max_tokens=1024,
       temperature=0,
-      callback_manager=CallbackManager([tracer])
+      callback_manager=CallbackManager([tracer]),
+      request_timeout=30
     )
   elif 'claude' in name:
     return ChatAnthropic(
       model=name,
       temperature=0,
       max_tokens=1024,
-      timeout=None,
+      timeout=30,
       max_retries=2,
       api_key=os.getenv('ANTHROPIC_API_KEY'),
       callback_manager=CallbackManager([tracer])
