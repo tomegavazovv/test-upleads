@@ -8,12 +8,7 @@
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "suitability_api.py",
-      "headers": {
-        "Access-Control-Allow-Origin": "https://upleads-prod.web.app",
-        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-        "Access-Control-Allow-Headers": "Content-Type, Authorization"
-      }
+      "destination": "suitability_api.py"
     }
   ]
 }
