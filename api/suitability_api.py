@@ -1,132 +1,24 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-from typing import List
-from langchain_openai import ChatOpenAI
-from models.suitability_rating import SuitabilityRating
-from utils.get_model import get_model, available_models
-from prompts.company_info_prompt import company_info_prompt
-import concurrent.futures
-from fastapi import Request
+from api.middleware.cors_middleware import add_cors_headers
+from api.routers.suitability_router import router
 
-app = FastAPI()
+app = FastAPI(title="Suitability API")
 
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "https://upleads-prod.web.app"],  # Add your production domain
+    allow_origins=["http://localhost:3000", "https://upleads-prod.web.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-class JobRequest(BaseModel):
-    title: str
-    description: str
-    models: List[str] = available_models
-    prompt: str = company_info_prompt
+# Add CORS middleware handler
+app.middleware("http")(add_cors_headers)
 
-class SuitabilityResponse(BaseModel):
-    model: str
-    score: int
-    reason: str
-
-class ProposalResponse(BaseModel):
-    model: str
-    proposal: str
-
-def analyze_with_model(model_name: str, prompt: str, job_title: str, job_description: str):
-    model = get_model(model_name)
-    suitability_agent = model.with_structured_output(SuitabilityRating)
-    
-    messages = [
-        {"role": "system", "content": prompt},
-        {"role": "user", "content": f"Job Title: {job_title}\n\nJob Description: {job_description}"}
-    ]
-    
-    result = suitability_agent.invoke(messages)
-    return model_name, result
-
-def generate_proposal_with_model(model_name: str, prompt: str, job_title: str, job_description: str):
-    model = get_model(model_name)
-    proposal_agent = model
-    
-    messages = [
-        {"role": "system", "content": prompt},
-        {"role": "user", "content": f"Job Title: {job_title}\n\nJob Description: {job_description}"}
-    ]
-    
-    result = proposal_agent.invoke(messages)
-    return model_name, result
-
-@app.get("/available-models")
-async def get_available_models():
-    return available_models
-
-@app.post("/analyze-job", response_model=List[SuitabilityResponse])
-async def analyze_job(job: JobRequest):
-    try:
-        # Use ThreadPoolExecutor for parallel execution
-        with concurrent.futures.ThreadPoolExecutor() as executor:
-            futures = [
-                executor.submit(analyze_with_model, model, job.prompt, job.title, job.description)
-                for model in job.models
-            ]
-            results = [future.result() for future in concurrent.futures.as_completed(futures)]
-        
-        # Format the response
-        return [
-            SuitabilityResponse(model=model_name, score=int(result.suitability_score), reason=result.reason)
-            for model_name, result in results
-        ]
-    
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-@app.post("/generate-proposal", response_model=List[ProposalResponse])
-async def generate_proposal(job: JobRequest):
-    try:
-        # Use ThreadPoolExecutor for parallel execution
-        with concurrent.futures.ThreadPoolExecutor() as executor:
-            futures = [
-                executor.submit(generate_proposal_with_model, model, job.prompt, job.title, job.description)
-                for model in job.models
-            ]
-            results = [future.result() for future in concurrent.futures.as_completed(futures)]
-        
-        # Format the response
-        return [
-            ProposalResponse(model=model_name, proposal=result.content)
-            for model_name, result in results
-        ]
-    
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-@app.options("/{rest_of_path:path}")
-async def preflight_handler():
-    return {
-        "status": "ok",
-        "headers": {
-            "Access-Control-Allow-Origin": "http://localhost:3000",
-            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-            "Access-Control-Allow-Headers": "Content-Type, Authorization"
-        }
-    }
-
-@app.middleware("http")
-async def add_cors_headers(request: Request, call_next):
-    print(f"Incoming request: {request.method} {request.url}")
-    print(f"Origin header: {request.headers.get('origin')}")
-    response = await call_next(request)
-    # Update to allow both local and production domains
-    origin = request.headers.get('origin')
-    if origin in ["http://localhost:3000", "https://upleads-prod.web.app"]:
-        response.headers["Access-Control-Allow-Origin"] = origin
-    response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
-    response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
-    print("Response headers:", response.headers)
-    return response
+# Include routers
+app.include_router(router)
 
 if __name__ == "__main__":
     import uvicorn
