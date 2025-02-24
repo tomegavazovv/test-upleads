@@ -46,3 +46,6 @@ logs/
 # Vercel
 .vercel 
 .vercel
+
+
+service-account-dev.json

@@ -18,13 +18,14 @@ class GenerateProposalState(TypedDict):
     job_title: str
     job_description: str
     model_name: str
-
+    job_country: str
 class ProposalAgentState(TypedDict):
     proposals: Annotated[list[ProposalByModel], operator.add]
     question_answer_pairs_by_model: Annotated[list[QuestionAnswerPairListByModel], operator.add]
     models: list[str]
     job_title: str
     job_description: str
+    job_country: str
     questions: list[str]
 
 class ProposalAgent:
@@ -56,7 +57,8 @@ class ProposalAgent:
             proposal_state = {
                 "job_title": state["job_title"],
                 "job_description": state["job_description"],
-                "model_name": model_name
+                "model_name": model_name,
+                "job_country": state["job_country"]
             }
             tasks.append(Send("generate_proposal", proposal_state))
             
@@ -74,7 +76,8 @@ class ProposalAgent:
     def generate_proposal(self, state: GenerateProposalState, config: RunnableConfig):
         job = {
             "title": state['job_title'],
-            "description": state['job_description']
+            "description": state['job_description'],
+            "country": state['job_country']
         }
         messages = [HumanMessage(content=json.dumps(job))]
         if self.proposal_system:
@@ -111,5 +114,3 @@ async def run_proposal_agent(job, models, proposal_system=None, question_answer_
         "proposals": result["proposals"],
         "question_answer_pairs_by_model": result["question_answer_pairs_by_model"]
     }
-
-
