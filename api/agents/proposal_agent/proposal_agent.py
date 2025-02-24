@@ -108,7 +108,7 @@ class ProposalAgent:
 
 async def run_proposal_agent(job, models, proposal_system=None, question_answer_system=None):
     abot = ProposalAgent(models, proposal_system=proposal_system, question_answer_system=question_answer_system)
-    result = await abot.graph.ainvoke({"job_title": job["title"], "job_description": job["description"], "models": models, "questions": job["questions"]})
+    result = await abot.graph.ainvoke({"job_title": job["title"], "job_country": job["clientInfo"]["country"], "job_description": job["description"], "models": models, "questions": job["questions"]})
  
     return {
         "proposals": result["proposals"],
