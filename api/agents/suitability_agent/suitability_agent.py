@@ -9,15 +9,13 @@ from api.agents.suitability_agent.models import SuitabilityRating, SuitabilityRa
 from api.utils.get_model_instance import get_model_instance
 
 class AnalyzeJobState(TypedDict):
-    job_title: str
-    job_description: str
+    job: dict
     model_name: str
 
 class SuitabilityAgentState(TypedDict):
     suitability_ratings: Annotated[list[SuitabilityRatingByModel], operator.add]
     models: list[str]
-    job_title: str
-    job_description: str
+    job: dict
 
 class SuitabilityAgent:
     def __init__(self, models, system=""):
@@ -40,13 +38,10 @@ class SuitabilityAgent:
         return state
 
     def continue_to_analyze_job(self, state: SuitabilityAgentState):
-        return [Send("analyze_job", {"job_title": state["job_title"], "job_description": state["job_description"], "model_name": model_name}) for model_name in state["models"]]
+        return [Send("analyze_job", {"job": state["job"], "model_name": model_name}) for model_name in state["models"]]
 
     def analyze_job(self, state: AnalyzeJobState, config: RunnableConfig):
-        job = {
-            "title": state['job_title'],
-            "description": state['job_description']
-        }
+        job = state['job']
         messages = [HumanMessage(content=json.dumps(job))]
         if self.system:
             messages = [SystemMessage(content=self.system)] + messages
@@ -62,6 +57,6 @@ class SuitabilityAgent:
 
 async def run_suitability_agent(job, models, system=None):
     abot = SuitabilityAgent(models, system=system)
-    result = await abot.graph.ainvoke({"job_title": job["title"], "job_description": job["description"], "models": models})
+    result = await abot.graph.ainvoke({"job": job, "models": models})
     return result["suitability_ratings"]
 
