@@ -57,6 +57,11 @@ class SuitabilityAgent:
 
 async def run_suitability_agent(job, models, system=None):
     abot = SuitabilityAgent(models, system=system)
-    result = await abot.graph.ainvoke({"job": job, "models": models})
+    filtered_job = {
+        "title": job["title"],  
+        "description": job["description"],
+        "questions": job["questions"]
+    }
+    result = await abot.graph.ainvoke({"job": filtered_job, "models": models})
     return result["suitability_ratings"]
 
