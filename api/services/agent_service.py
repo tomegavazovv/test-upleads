@@ -8,7 +8,7 @@ from api.agents.proposal_agent.proposal_agent import run_proposal_agent
 from api.agents.suitability_agent.models import SuitabilityRatingByModel
 from api.agents.proposal_agent.models import ProposalByModel
 from api.prompts.system_with_knowledge_base_prompt import system_with_knowledge_base_prompt
-from api.models.types import AiConfig
+from api.models.schemas import AiConfig
 
 class AgentService:
     def __init__(self):
