@@ -1,7 +1,8 @@
 from pydantic import BaseModel, Field
-from typing import List, Dict
+from typing import List, Dict, Optional
 from api.agents.suitability_agent.models import SuitabilityRatingByModel
 from api.agents.proposal_agent.models import ProposalByModel
+
 
 class AIRequest(BaseModel):
     job: Dict = {}
@@ -17,3 +18,10 @@ class SuitabilityRating(BaseModel):
 
 class ProposalResponse(BaseModel):
     proposals: List[ProposalByModel]
+
+class AiConfig(BaseModel):
+    id: str
+    suitabilityPrompt: Optional[str] = None
+    proposalPrompt: Optional[str] = None
+    questionProposalPrompt: Optional[str] = None
+    knowledgeBase: Optional[str] = None
