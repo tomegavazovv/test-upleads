@@ -31,8 +31,6 @@ class AgentService:
       proposal_system = ai_config.proposalPrompt if req.job['questions'] else ai_config.questionProposalPrompt
       proposal_system_with_knowledge_base = system_with_knowledge_base_prompt.format(knowledge_base=knowledge_base, system_prompt=proposal_system)
       
-      question_system = answer_questions_prompt.format(knowledge_base=ai_config.knowledgeBase)
-      
       proposals = await run_proposal_agent(req.job, req.models, proposal_system_with_knowledge_base)
       return proposals
    
