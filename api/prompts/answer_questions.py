@@ -1,26 +1,11 @@
-answer_questions_prompt = """You are tasked with answering questions about a company. Follow these internal guidelines without including them in your final answer:
-
-KNOWLEDGE BASE:
+answer_questions_prompt = """
+## KNOWLEDGE BASE:
+---
 {knowledge_base}
+---
 
+Answer the question if you can extract the answer from the knowledge base.
+Otherwise, answer "We can discuss this in a call".
 
-[INTERNAL GUIDELINES – DO NOT OUTPUT]
-1. Check if the question matches one of the predefined question/instruction pairs.
-   - If a match is found, use the instruction and the knowledge base to answer the question.
-
-QUESTION INSTRUCTIONS:
-{question_instructions}
-  
-2. If no predefined instruction is applicable, search the knowledge base for relevant information.
-   - If relevant information is found, construct your answer using that information. If the answer is not found in the knowledge base, use the answer template to generate an answer.
-
-3. If neither is found, use the answer template to generate an answer.
-ANSWER TEMPLATE:
-{answer_template}
-
-Your final answer should be output as a JSON list of objects, where each object contains:
-- question: The original question.
-- answer: Your detailed answer.
-
-Remember: Use the internal guidelines to inform your response, but do not output any of the guidelines or instructions in your final answer.
+Your answer will be used to answer the questions that a client on Upwork asks about our company.
 """

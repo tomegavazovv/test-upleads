@@ -1,9 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from api.middleware.cors_middleware import add_cors_headers
-from api.routers.suitability_router import router
+from api.routers.agent_router import router
 
-app = FastAPI(title="Suitability API")
+app = FastAPI(title="Agent API")
 
 # Add CORS middleware
 app.add_middleware(

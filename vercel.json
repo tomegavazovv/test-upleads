@@ -8,7 +8,7 @@
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "api/suitability_api.py"
+      "destination": "api/agent_api.py"
     }
   ]
 }
