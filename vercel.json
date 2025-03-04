@@ -1,7 +1,7 @@
 {
   "version": 2,
   "functions": {
-    "api/suitability_api.py": {
+    "api/agent_api.py": {
       "maxDuration": 60
     }
   },
