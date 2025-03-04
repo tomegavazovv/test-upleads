@@ -42,7 +42,7 @@ class SuitabilityAgent:
 
     def analyze_job(self, state: AnalyzeJobState, config: RunnableConfig):
         job = state['job']
-        messages = [HumanMessage(content=json.dumps(job))]
+        messages = [HumanMessage(content=f"Please analyze the following job: {json.dumps(job)}")]
         if self.system:
             messages = [SystemMessage(content=self.system)] + messages
 
