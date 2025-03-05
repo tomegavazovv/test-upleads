@@ -64,8 +64,12 @@ class ProposalAgent:
             "title": state['job_title'],
             "description": state['job_description'],
             "country": state['job_country'],
-            "questions": state['questions']
         }
+        
+        # Only include questions if they exist
+        if state['questions']:
+            job["questions"] = state['questions']
+
         messages = [HumanMessage(content=f"Please generate a job proposal for the following job: {json.dumps(job)}")]
         if self.proposal_system:
             messages = [SystemMessage(content=self.proposal_system)] + messages

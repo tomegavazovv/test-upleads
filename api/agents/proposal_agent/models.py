@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import List
+from typing import List, Optional
 
 class QuestionAnswerPair(BaseModel):
     question: str = Field(description="The question")
@@ -7,7 +7,7 @@ class QuestionAnswerPair(BaseModel):
 
 class Proposal(BaseModel):
     text: str = Field(description="The proposal text")
-    question_answer_pairs: List[QuestionAnswerPair] = Field(description="The question answer pairs")
+    question_answer_pairs: Optional[List[QuestionAnswerPair]] = Field(default=None, description="The question answer pairs (optional)")
 
 class ProposalByModel(BaseModel):
     model_name: str
