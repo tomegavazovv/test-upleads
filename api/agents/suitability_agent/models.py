@@ -6,6 +6,6 @@ class SuitabilityRating(BaseModel):
     reason: str = Field(description="A detailed explanation of the suitability score. Max 2 sentences.")
 
 class SuitabilityRatingByModel(BaseModel):
-    model_name: str
-    suitability_rating: SuitabilityRating
+    modelName: str
+    suitability: SuitabilityRating
 

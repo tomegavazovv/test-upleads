@@ -6,10 +6,10 @@ class QuestionAnswerPair(BaseModel):
     answer: str = Field(description="The answer")
 
 class Proposal(BaseModel):
-    text: str = Field(description="The proposal text")
-    question_answer_pairs: Optional[List[QuestionAnswerPair]] = Field(default=None, description="The question answer pairs (optional)")
+    coverLetter: str = Field(description="The proposal text")
+    questionAnswerPairs: Optional[List[QuestionAnswerPair]] = Field(default=None, description="The question answer pairs (optional)")
 
 class ProposalByModel(BaseModel):
-    model_name: str
+    modelName: str
     proposal: Proposal
     

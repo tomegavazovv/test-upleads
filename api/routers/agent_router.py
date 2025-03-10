@@ -1,23 +1,21 @@
-from fastapi import APIRouter, Request
+from fastapi import APIRouter
 from typing import List
-from api.models.schemas import AIRequest, SuitabilityResponse, ProposalResponse
+from api.models.schemas import AIRequest
+from api.agents.suitability_agent.models import SuitabilityRatingByModel
+from api.agents.proposal_agent.models import ProposalByModel
 from api.services.agent_service import AgentService
 
 router = APIRouter()
 
 agent_service = AgentService()
 
-@router.post("/analyze-job", response_model=SuitabilityResponse)
+@router.post("/analyze-job", response_model=List[SuitabilityRatingByModel])
 async def analyze_job(req: AIRequest):
     ratings = await agent_service.analyze_job(req)
-    return SuitabilityResponse(data=ratings)
+    return ratings
 
-@router.post("/generate-proposal", response_model=ProposalResponse)
+@router.post("/generate-proposal", response_model=List[ProposalByModel])
 async def generate_proposal(req: AIRequest):
-    result = await agent_service.generate_proposal(req)
-    proposals = result["proposals"]
-    
-    return ProposalResponse(
-        proposals=proposals,
-    )
+    proposals = await agent_service.generate_proposal(req)
+    return proposals
 

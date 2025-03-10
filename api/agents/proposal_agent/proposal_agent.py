@@ -11,7 +11,7 @@ from api.agents.proposal_agent.models import ProposalByModel, Proposal, Question
 class GenerateProposalState(TypedDict):
     job_title: str
     job_description: str
-    model_name: str
+    modelName: str
     job_country: str
     questions: list[str]
     
@@ -50,7 +50,7 @@ class ProposalAgent:
             proposal_state = {
                 "job_title": state["job_title"],
                 "job_description": state["job_description"],
-                "model_name": model_name,
+                "modelName": model_name,
                 "job_country": state["job_country"],
                 "questions": state["questions"]
             }
@@ -74,16 +74,16 @@ class ProposalAgent:
         if self.proposal_system:
             messages = [SystemMessage(content=self.proposal_system)] + messages
 
-        model = get_model_instance(state['model_name']).with_structured_output(Proposal)
+        model = get_model_instance(state['modelName']).with_structured_output(Proposal)
 
         message = model.invoke(messages, config=config)
         
         # Create a proper Proposal object with both text and question_answer_pairs
         proposal = ProposalByModel(
-            model_name=state['model_name'], 
+            modelName=state['modelName'], 
             proposal=Proposal(
-                text=message.text,
-                question_answer_pairs=message.question_answer_pairs
+                coverLetter=message.coverLetter,
+                questionAnswerPairs=message.questionAnswerPairs
             )
         )
 
@@ -94,7 +94,4 @@ class ProposalAgent:
 async def run_proposal_agent(job, models, proposal_system=None):
     abot = ProposalAgent(models, proposal_system=proposal_system)
     result = await abot.graph.ainvoke({"job_title": job["title"], "job_country": job["clientInfo"]["country"], "job_description": job["description"], "models": models, "questions": job["questions"]})
-    print(result)
-    return {
-        "proposals": result["proposals"],
-    }
+    return result["proposals"]

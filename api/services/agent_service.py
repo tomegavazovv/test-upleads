@@ -1,6 +1,6 @@
 import concurrent.futures
 from typing import List
-from api.models.schemas import AIRequest, SuitabilityResponse, ProposalResponse, SuitabilityRating
+from api.models.schemas import AIRequest
 from api.utils.get_model_instance import get_model_instance
 from api.agents.suitability_agent.suitability_agent import run_suitability_agent
 from api.agents.proposal_agent.proposal_agent import run_proposal_agent

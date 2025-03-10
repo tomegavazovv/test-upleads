@@ -50,8 +50,8 @@ class SuitabilityAgent:
 
         message = model.invoke(messages, config=config)
 
-        suitability_rating = SuitabilityRating(rating=message.rating, reason=message.reason)
-        result = SuitabilityRatingByModel(model_name=state['model_name'], suitability_rating=suitability_rating)
+        suitability = SuitabilityRating(rating=message.rating, reason=message.reason)
+        result = SuitabilityRatingByModel(modelName=state['model_name'], suitability=suitability)
 
         return {'suitability_ratings': [result]}
 
