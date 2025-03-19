@@ -8,7 +8,7 @@ app = FastAPI(title="Agent API")
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "https://upleads-prod.web.app"],
+    allow_origins=["http://localhost:3000", "https://upleads-prod.web.app", "https://lancer.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

@@ -9,7 +9,8 @@ tracer = LangChainTracer(project_name="chatbot-upleads")
 
 def get_model_instance(model_name: str):
 
-  if 'gpt' in model_name:
+  if 'gpt' in model_name or 'o3' in model_name:
+    print('hehe')
     return ChatOpenAI(
       model=model_name,
       temperature=0,
